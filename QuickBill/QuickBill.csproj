@@ -47,6 +47,10 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <AndroidAsset Include="Resources\Raw\pdfjs\**" />
+	</ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="itext7" Version="8.0.3" />
 		<PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.3" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
@@ -55,6 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels/" />
     <Folder Include="Views\" />
   </ItemGroup>
 

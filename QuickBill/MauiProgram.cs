@@ -17,6 +17,14 @@ public static class MauiProgram
 			});
 		builder.ConfigureSyncfusionCore();
 
+#if ANDROID
+    builder.Services.ConfigureMauiHandlers(handlers =>
+    {
+        handlers.AddHandler(typeof(WebView), typeof(QuickBill.Platforms.Android.MyWebViewHandler));
+    });
+#endif
+
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
