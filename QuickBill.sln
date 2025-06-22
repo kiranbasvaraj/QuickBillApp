@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBill", "QuickBill\QuickBill.csproj", "{7D647DBF-C1FC-4F30-8AB4-AD30AFDE4235}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D647DBF-C1FC-4F30-8AB4-AD30AFDE4235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D647DBF-C1FC-4F30-8AB4-AD30AFDE4235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D647DBF-C1FC-4F30-8AB4-AD30AFDE4235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D647DBF-C1FC-4F30-8AB4-AD30AFDE4235}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D87019FF-59F8-4B42-95A3-187D5A0E9D1F}
+	EndGlobalSection
+EndGlobal
