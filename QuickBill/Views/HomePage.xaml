@@ -1,12 +1,140 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuickBill.Views.HomePage">
-    <Grid RowDefinitions="*, 50"
-          Margin="10">
-        <WebView x:Name="pdfview"/>
-        <Button Grid.Row="1" Text="Generate Invoice"
-                BackgroundColor="#F85903"
-                Clicked="OnGenerateInvoiceClicked"></Button>
-    </Grid>
+             x:Class="QuickBill.Views.HomePage"
+             xmlns:local="clr-namespace:QuickBill.ViewModels"
+             xmlns:models="clr-namespace:QuickBill.Models"
+             x:DataType="local:HomePageViewModel">
+
+  <ContentPage.Resources>
+    <Style TargetType="Entry">
+      <Setter Property="PlaceholderColor"
+              Value="Gray"/>
+    </Style>
+  </ContentPage.Resources>
+
+  <Grid RowDefinitions="Auto,*,Auto,Auto"
+        Margin="10">
+
+    <!-- Red bordered form area -->
+    <Border Grid.Row="0"
+            Padding="0"
+            StrokeThickness="1"
+            Stroke="gray">
+
+      <Grid Padding="1,5,-2,5">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="3*"/>
+          <ColumnDefinition Width="2*"/>
+          <ColumnDefinition Width="2*"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Form Fields -->
+        <Entry Placeholder="Item"
+               Grid.Column="0"
+               Text="{Binding ItemName}"
+               HorizontalTextAlignment="Justify"/>
+
+        <Entry Placeholder="Qty"
+               Grid.Column="1"
+               Text="{Binding Quantity}"
+               HorizontalTextAlignment="Justify"
+               Keyboard="Numeric"/>
+
+        <Entry Placeholder="Price in ₹"
+               Grid.Column="2"
+               Text="{Binding Price}"
+               HorizontalTextAlignment="Justify"
+               Keyboard="Numeric"/>
+
+        <!-- Check/Add Button -->
+        <Button Grid.Column="3"
+                VerticalOptions="Center"
+                Text="✔"
+                FontSize="16"
+                WidthRequest="20"
+                HeightRequest="20"
+                BackgroundColor="Green"
+                TextColor="White"
+                CornerRadius="80"
+                Command="{Binding AddItemReceiptItemCommand}"/>
+      </Grid>
+    </Border>
+
+    <!-- CollectionView Row -->
+    <CollectionView Grid.Row="1"
+                    BackgroundColor="AliceBlue"
+                    ItemsSource="{Binding ReceiptItemModelList}">
+
+      <!-- Header -->
+      <CollectionView.HeaderTemplate>
+        <DataTemplate>
+          <Grid Padding="5">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="3*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Text="ItemName"
+                   Grid.Column="0"
+                   HorizontalTextAlignment="Start"/>
+
+            <Label Text="Quantity"
+                   Grid.Column="1"
+                   HorizontalTextAlignment="Center"/>
+
+            <Label Text="Price"
+                   Grid.Column="2"
+                   HorizontalTextAlignment="Center"/>
+          </Grid>
+        </DataTemplate>
+      </CollectionView.HeaderTemplate>
+
+      <!-- Items -->
+      <CollectionView.ItemTemplate>
+        <DataTemplate x:DataType="models:ReceiptItemModel">
+          <Grid Padding="5">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="3*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Text="{Binding ItemName}"
+                Grid.Column="0"
+                HorizontalTextAlignment="Start"/>
+            <Label Text="{Binding Quantity}"
+                Grid.Column="1"
+                HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding Price}"
+                Grid.Column="2"
+                HorizontalTextAlignment="Center"/>
+          </Grid>
+        </DataTemplate>
+      </CollectionView.ItemTemplate>
+    </CollectionView>
+
+    <Label  Grid.Row="2"
+        Text="{Binding TotalAmount,StringFormat=Total Amount ₹-{0}}"
+            FontSize="Large"
+            Padding="5"
+            HorizontalOptions="EndAndExpand"
+            TextColor="Black"/>
+    <!-- Bottom Button -->
+    <Button Grid.Row="3"
+            Text="Generate Invoice"
+            BackgroundColor="#F85903"
+            Command="{Binding OnGenerateInvoiceCommand}"/>
+
+  </Grid>
 </ContentPage>

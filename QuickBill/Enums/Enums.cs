@@ -9,3 +9,9 @@ public enum PaymentStatusEnum
     Failed = 4
 
 }
+public enum StorageKeyType
+{
+    PrimaryKey,
+    ForeignKey
+}
+

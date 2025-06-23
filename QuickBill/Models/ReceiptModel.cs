@@ -1,9 +1,11 @@
 using System;
+using SQLite;
 
 namespace QuickBill.Models;
 
 public class ReceiptModel
 {
+    [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public string? ReceiptNumber { get; set; }
     public DateTime Date { get; set; }

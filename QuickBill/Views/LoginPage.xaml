@@ -2,14 +2,43 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuickBill.Views.LoginPage">
-    <VerticalStackLayout Padding="20"
-                         Spacing="20">
-<Label Text="Welcome to QuickBill"
-               FontSize="32"
-               HorizontalTextAlignment="Center"
-               TextColor="Black"/>
-        <Entry Placeholder="Enter Company Name"  HorizontalTextAlignment="Center" TextColor="Black" PlaceholderColor="Gray" Text="{Binding CompanyName}"/>
-        <Button Text="Continue" BackgroundColor="#F85903" Command="{Binding ContinueCommand}"></Button>
 
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Welcome to QuickBill"
+                   FontSize="32"
+                   HorizontalTextAlignment="Center"
+                   TextColor="Black"/>
+
+            <Label Text="Company Name"
+                   FontAttributes="Bold"/>
+            <Entry Placeholder="Enter company name"
+                   Text="{Binding CompanyName}"/>
+
+            <Label Text="Company Address"
+                   FontAttributes="Bold"/>
+            <Editor Placeholder="Enter company address"
+                    AutoSize="TextChanges"
+                    Text="{Binding CompanyAddress}"/>
+
+            <Label Text="Phone Number"
+                   FontAttributes="Bold"/>
+            <Entry Placeholder="Enter phone number"
+                   Keyboard="Telephone"
+                   Text="{Binding CompanyPhone}"/>
+
+            <Label Text="Email"
+                   FontAttributes="Bold"/>
+            <Entry Placeholder="Enter email"
+                   Keyboard="Email"
+                   Text="{Binding CompanyEmail}"/>
+
+            <Button Text="Submit"
+                    Command="{Binding ContinueCommand}"
+                    BackgroundColor="#F85903"
+                    TextColor="White"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

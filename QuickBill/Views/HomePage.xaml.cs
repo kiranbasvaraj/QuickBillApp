@@ -18,18 +18,18 @@ public partial class HomePage : ContentPage
 	}
 	private async void OnGenerateInvoiceClicked(object sender, EventArgs e)
 	{
-		var pdfFile =await PdfHelper.OnGenerateInvoiceClicked();
-		 //var stream = File.OpenRead(pdfFile);
+		// var pdfFile =await PdfHelper.OnGenerateInvoiceClicked();
+		//  //var stream = File.OpenRead(pdfFile);
 
 
-		//pdfViewer.DocumentSource = stream;
+		// //pdfViewer.DocumentSource = stream;
 
 
-		#if ANDROID
-		            pdfview.Source = $"file:///android_asset/pdfjs/web/viewer.html?file=file://{WebUtility.UrlEncode(pdfFile)}";
-		#else
-					pdfview.Source = pdfFile;
-		#endif
+		// #if ANDROID
+		//             pdfview.Source = $"file:///android_asset/pdfjs/web/viewer.html?file=file://{WebUtility.UrlEncode(pdfFile)}";
+		// #else
+		// 			pdfview.Source = pdfFile;
+		// #endif
 
 	}
 

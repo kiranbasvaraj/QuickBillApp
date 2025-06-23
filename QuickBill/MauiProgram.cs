@@ -19,7 +19,9 @@ public static class MauiProgram
 		// builder.ConfigureSyncfusionCore();
 		builder.RegisterServices();
 		builder.RegisterViews();
-		builder.RegisterViewModels();
+		builder.RegisterViewModelsForBindingContext();
+		builder.RegisterViewModelsAsService();
+		builder.InitialzeSqliteConnection();
 
 
 #if ANDROID

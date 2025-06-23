@@ -7,10 +7,10 @@
     xmlns:views="clr-namespace:QuickBill.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="QuickBill"
-    Shell.TabBarUnselectedColor="Gray"
-    Shell.TabBarForegroundColor="#F85903"
+    Shell.TabBarUnselectedColor="#FF989696"
+    Shell.TabBarForegroundColor="#FFF55600"
     Shell.TabBarBackgroundColor="#F5F5F5"
-    Shell.BackgroundColor="#F85903">
+    Shell.BackgroundColor="#FF989696">
     <ShellContent  Route="LoginPage"
                    ContentTemplate="{DataTemplate views:LoginPage}"/>
 

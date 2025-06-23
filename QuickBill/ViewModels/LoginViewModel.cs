@@ -4,7 +4,7 @@ using QuickBill.Interfaces;
 
 namespace QuickBill.ViewModels;
 
-public class LoginViewModel : ILoginViewModel
+public class LoginViewModel : BaseViewModel, ILoginViewModel
 {
     INavigationService _navigationService { get; }
     public ICommand ContinueCommand { get; }
@@ -26,6 +26,7 @@ public class LoginViewModel : ILoginViewModel
     {
         ContinueCommand = new Command(async (obj) => await OnContinue());
         _navigationService = navigationService;
+
     }
 
     private async Task OnContinue()
@@ -34,7 +35,9 @@ public class LoginViewModel : ILoginViewModel
         if (!string.IsNullOrWhiteSpace(CompanyName))
             await _navigationService.NavigateAsync("//MainTabs");
         else
+        {
             await NavigationService.GetMainPage().DisplayAlert("Opps!", "Please enter a company name.", "OK");
+        }
 
 
     }
