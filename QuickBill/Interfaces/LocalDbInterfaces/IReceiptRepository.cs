@@ -7,3 +7,7 @@ public interface IReceiptRepository : IBaseRepository<ReceiptModel>
 {
 
 }
+public interface IReceiptItemRepository : IBaseRepository<ReceiptItemModel>
+{
+
+}

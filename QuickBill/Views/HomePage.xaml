@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:QuickBill.ViewModels"
              xmlns:models="clr-namespace:QuickBill.Models"
              x:DataType="local:HomePageViewModel">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Clear"
+                 Command="{Binding ClearCommand}"/>
+  </ContentPage.ToolbarItems>
 
   <ContentPage.Resources>
     <Style TargetType="Entry">
@@ -111,21 +115,21 @@
             </Grid.ColumnDefinitions>
 
             <Label Text="{Binding ItemName}"
-                Grid.Column="0"
-                HorizontalTextAlignment="Start"/>
+                   Grid.Column="0"
+                   HorizontalTextAlignment="Start"/>
             <Label Text="{Binding Quantity}"
-                Grid.Column="1"
-                HorizontalTextAlignment="Center"/>
+                   Grid.Column="1"
+                   HorizontalTextAlignment="Center"/>
             <Label Text="{Binding Price}"
-                Grid.Column="2"
-                HorizontalTextAlignment="Center"/>
+                   Grid.Column="2"
+                   HorizontalTextAlignment="Center"/>
           </Grid>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>
 
     <Label  Grid.Row="2"
-        Text="{Binding TotalAmount,StringFormat=Total Amount ₹-{0}}"
+            Text="{Binding TotalAmount, StringFormat='Total Amount ₹: {0}'}"
             FontSize="Large"
             Padding="5"
             HorizontalOptions="EndAndExpand"

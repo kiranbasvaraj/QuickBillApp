@@ -1,7 +1,9 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+#if ANDROID
 using Android.Provider;
+#endif
 using QuickBill.Interfaces;
 
 namespace QuickBill.ViewModels;

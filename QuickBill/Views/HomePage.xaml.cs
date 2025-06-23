@@ -11,10 +11,11 @@ namespace QuickBill.Views;
 
 public partial class HomePage : ContentPage
 {
+	HomePageViewModel homePageVm;
 	public HomePage(HomePageViewModel homePageViewModel)
 	{
 		InitializeComponent();
-		this.BindingContext = homePageViewModel;
+		this.BindingContext = homePageVm = homePageViewModel;
 	}
 	private async void OnGenerateInvoiceClicked(object sender, EventArgs e)
 	{
@@ -32,5 +33,19 @@ public partial class HomePage : ContentPage
 		// #endif
 
 	}
+
+	protected override void OnAppearing()
+	{
+		base.OnAppearing();
+
+		// Fire and forget the async method
+		_ = OnAppearingHandlerAsync();
+	}
+
+	private async Task OnAppearingHandlerAsync()
+	{
+		await homePageVm.OnAppearingHanlder();
+	}
+
 
 }

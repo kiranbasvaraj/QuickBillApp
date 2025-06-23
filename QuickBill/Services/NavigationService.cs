@@ -5,9 +5,9 @@ namespace QuickBill;
 
 public class NavigationService : INavigationService
 {
-    public Task NavigateAsync(string pageName)
+    public async Task NavigateAsync(string pageName)
     {
-        return Shell.Current.GoToAsync(pageName);
+       await Shell.Current.GoToAsync(pageName);
     }
     public Task GobackAsync()
     {

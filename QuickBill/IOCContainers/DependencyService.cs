@@ -16,6 +16,8 @@ public static class DependencyService
         // mauiAppBuilder.Services.AddTransient<ILoggingService, LoggingService>();
         mauiAppBuilder.Services.AddTransient<INavigationService, NavigationService>();
         mauiAppBuilder.Services.AddTransient<IReceiptRepository, ReceiptRepository>();
+        mauiAppBuilder.Services.AddTransient<IReceiptItemRepository, ReceiptItemRepository>();
+        
 
         // More services registered here.
 
@@ -26,7 +28,7 @@ public static class DependencyService
     {
         mauiAppBuilder.Services.AddTransient<LoginViewModel>();
         mauiAppBuilder.Services.AddTransient<ReceiptHistoryViewModel>();
-        mauiAppBuilder.Services.AddTransient<HomePageViewModel>();
+        mauiAppBuilder.Services.AddSingleton<HomePageViewModel>();
         // More view-models registered here.
 
         return mauiAppBuilder;
@@ -36,7 +38,7 @@ public static class DependencyService
     {
         mauiAppBuilder.Services.AddTransient<ILoginViewModel, LoginViewModel>();
         mauiAppBuilder.Services.AddTransient<IReceiptHistoryViewModel, ReceiptHistoryViewModel>();
-        mauiAppBuilder.Services.AddTransient<IHomePageViewModel, HomePageViewModel>();
+        mauiAppBuilder.Services.AddSingleton<IHomePageViewModel, HomePageViewModel>();
 
         // More view-models registered here.
 
@@ -48,6 +50,7 @@ public static class DependencyService
         mauiAppBuilder.Services.AddSingleton<HomePage>();
         mauiAppBuilder.Services.AddSingleton<LoginPage>();
         mauiAppBuilder.Services.AddSingleton<ReceiptHistoryPage>();
+        mauiAppBuilder.Services.AddSingleton<PdfView>();
         // More views registered here.
 
         return mauiAppBuilder;
@@ -55,6 +58,7 @@ public static class DependencyService
     public static MauiAppBuilder InitialzeSqliteConnection(this MauiAppBuilder mauiAppBuilder)
     {
         SqliteDbHelper.InitializeDatabase();
+        SqliteDbHelper.CreateTables();
         return mauiAppBuilder;
 
     }

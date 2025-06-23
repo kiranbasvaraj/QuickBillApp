@@ -7,7 +7,7 @@ public interface IHomePageViewModel
 {
     Task GenerateReceipt();
 
-    void AddItemsToReceipt();
+    Task AddItemsToReceipt();
 
 
 }

@@ -8,3 +8,9 @@ public class ReceiptRepository : BaseRespository<ReceiptModel>, IReceiptReposito
 {
 
 }
+
+
+public class ReceiptItemRepository : BaseRespository<ReceiptItemModel>, IReceiptItemRepository
+{
+
+}

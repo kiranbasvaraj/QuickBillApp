@@ -32,13 +32,20 @@ public class LoginViewModel : BaseViewModel, ILoginViewModel
     private async Task OnContinue()
     {
         // Handle the continue button click event
-        if (!string.IsNullOrWhiteSpace(CompanyName))
+       // if (!string.IsNullOrWhiteSpace(CompanyName))
             await _navigationService.NavigateAsync("//MainTabs");
-        else
-        {
-            await NavigationService.GetMainPage().DisplayAlert("Opps!", "Please enter a company name.", "OK");
-        }
+        // else
+        // {
+        //     await NavigationService.GetMainPage().DisplayAlert("Opps!", "Please enter a company name.", "OK");
+        // }
 
 
+    }
+
+    //TODO:Remove this
+    public async override void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        base.ApplyQueryAttributes(query);
+        await _navigationService.NavigateAsync("//MainTabs");
     }
 }

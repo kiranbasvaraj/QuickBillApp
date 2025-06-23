@@ -7,6 +7,7 @@ using iText.Layout.Properties;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.IO.Font.Constants;
+using QuickBill.Models;
 
 
 namespace QuickBill.PdfGeneratorHelper;
@@ -15,13 +16,13 @@ public class PdfHelper
 {
 
 
-    public static async Task<string> OnGenerateInvoiceClicked()
+    public static async Task<string> OnGenerateInvoiceClicked(List<ReceiptItemModel> receiptItems)
     {
         string fileName = "mauidotnet.pdf";
 
 #if ANDROID
-		var docsDirectory = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDocuments);
-		var filePath = Path.Combine(docsDirectory.AbsoluteFile.Path, fileName);
+        var docsDirectory = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDocuments);
+        var filePath = Path.Combine(docsDirectory.AbsoluteFile.Path, fileName);
 #else
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
 #endif
@@ -100,7 +101,7 @@ public class PdfHelper
         // }
 
 
-        await GenerateReceiptPdfAsync(filePath);
+        await GenerateReceiptPdfAsync(filePath, receiptItems);
 
         return filePath;
     }
@@ -118,7 +119,7 @@ public class PdfHelper
 
     // Uncomment the following method if you need to convert an ImageSource to a byte array
 
-    public static async Task GenerateReceiptPdfAsync(string filePath)
+    public static async Task GenerateReceiptPdfAsync(string filePath, List<ReceiptItemModel> receiptItems)
     {
         await Task.Run(() =>
         {
@@ -128,6 +129,11 @@ public class PdfHelper
 
             var bold = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             var regular = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+
+            Paragraph header = new Paragraph("QuickBill Invoice")
+                .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
+                .SetFontSize(20);
+            document.Add(header);
 
             // Company Header
             var companyTable = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }))
@@ -145,7 +151,7 @@ public class PdfHelper
                 .UseAllAvailableWidth();
             receiptTable.AddCell(new Paragraph("Receipt # RT-356890")
                 .SetFont(bold).SetFontSize(12).SetBorder(iText.Layout.Borders.Border.NO_BORDER));
-            receiptTable.AddCell(new Paragraph("Feb 14, 2023")
+            receiptTable.AddCell(new Paragraph(DateTime.Now.ToString())
                 .SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT).SetFont(regular).SetFontSize(10).SetBorder(iText.Layout.Borders.Border.NO_BORDER));
             document.Add(receiptTable);
 
@@ -160,12 +166,20 @@ public class PdfHelper
             items.AddHeaderCell("Qty");
             items.AddHeaderCell("Price");
 
-            for (int i = 0; i < 3; i++)
+            // for (int i = 0; i < 3; i++)
+            // {
+            //     items.AddCell(new Paragraph("Black Bag"));
+            //     items.AddCell(new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
+            //     items.AddCell("1");
+            //     items.AddCell("$120");
+            // }
+
+            foreach (var item in receiptItems)
             {
-                items.AddCell(new Paragraph("Black Bag"));
-                items.AddCell(new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
-                items.AddCell("1");
-                items.AddCell("$120");
+                items.AddCell(new Paragraph(item.ItemName));
+                items.AddCell(new Paragraph("NA"));
+                items.AddCell(item.Quantity?.ToString());
+                items.AddCell(item.Price?.ToString());
             }
             document.Add(items);
 
@@ -173,17 +187,18 @@ public class PdfHelper
             var totals = new Table(UnitValue.CreatePercentArray(new float[] { 70, 30 }))
                 .UseAllAvailableWidth().SetMarginTop(20);
 
-            totals.AddCell(new Paragraph("Subtotal").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
-            totals.AddCell(new Paragraph("$360").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            //remove for now
+            // totals.AddCell(new Paragraph("Subtotal").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            // totals.AddCell(new Paragraph("$360").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
 
-            totals.AddCell(new Paragraph("Shipping").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
-            totals.AddCell(new Paragraph("$10").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            // totals.AddCell(new Paragraph("Shipping").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            // totals.AddCell(new Paragraph("$10").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
 
-            totals.AddCell(new Paragraph("Tax").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
-            totals.AddCell(new Paragraph("$5").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
-
+            // totals.AddCell(new Paragraph("Tax").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            // totals.AddCell(new Paragraph("$5").SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            double total = receiptItems?.Sum(x => x.Price ?? 0) ?? 0;
             totals.AddCell(new Paragraph("Total").SetFont(bold).SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
-            totals.AddCell(new Paragraph("$375").SetFont(bold).SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
+            totals.AddCell(new Paragraph($"Rupees {total:N2} Only").SetFont(bold).SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT));
 
             document.Add(totals);
 

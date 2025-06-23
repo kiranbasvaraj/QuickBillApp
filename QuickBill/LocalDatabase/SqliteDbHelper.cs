@@ -15,11 +15,11 @@ public class SqliteDbHelper
     {
         get
         {
-            if (DbConnection is null)
-            {
-                dbConnection = InitializeDatabase();
-            }
-            return dbConnection!;
+            // if (DbConnection is null)
+            // {
+            return InitializeDatabase();
+            //  }
+            //  return dbConnection!;
         }
     }
 
@@ -45,6 +45,7 @@ public class SqliteDbHelper
     {
 
         await DbConnection.CreateTableAsync<ReceiptModel>();
+        await DbConnection.CreateTableAsync<ReceiptItemModel>();
     }
 
 
