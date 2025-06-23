@@ -8,7 +8,7 @@
     Shell.FlyoutBehavior="Disabled"
     Title="QuickBill"
     Shell.TabBarUnselectedColor="Gray"
-    Shell.TabBarForegroundColor="#F85903" 
+    Shell.TabBarForegroundColor="#F85903"
     Shell.TabBarBackgroundColor="#F5F5F5"
     Shell.BackgroundColor="#F85903">
     <ShellContent  Route="LoginPage"
@@ -16,12 +16,12 @@
 
     <TabBar Route="MainTabs">
         <Tab Title="Receipt"
-                Icon="receipt">
+             Icon="receipt">
             <ShellContent ContentTemplate="{DataTemplate views:HomePage}"/>
         </Tab>
         <Tab Icon="history"
-                Title="History">
-            <ShellContent ContentTemplate="{DataTemplate views:InvoiceHistoryPage}"/>
+             Title="History">
+            <ShellContent ContentTemplate="{DataTemplate views:ReceiptHistoryPage}"/>
         </Tab>
     </TabBar>
 

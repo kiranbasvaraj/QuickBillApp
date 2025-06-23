@@ -4,15 +4,17 @@ using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout;
 using iText.Layout.Element;
 using QuickBill.PdfGeneratorHelper;
+using QuickBill.ViewModels;
 using System.Net;
 
 namespace QuickBill.Views;
 
 public partial class HomePage : ContentPage
 {
-	public HomePage()
+	public HomePage(HomePageViewModel homePageViewModel)
 	{
 		InitializeComponent();
+		this.BindingContext = homePageViewModel;
 	}
 	private async void OnGenerateInvoiceClicked(object sender, EventArgs e)
 	{

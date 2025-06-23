@@ -8,8 +8,8 @@
                FontSize="32"
                HorizontalTextAlignment="Center"
                TextColor="Black"/>
-        <Entry Placeholder="Enter Company Name"  HorizontalTextAlignment="Center" TextColor="Black" PlaceholderColor="Gray"/>
-        <Button Text="Conitnue" BackgroundColor="#F85903" Clicked="Button_Clicked"></Button>
+        <Entry Placeholder="Enter Company Name"  HorizontalTextAlignment="Center" TextColor="Black" PlaceholderColor="Gray" Text="{Binding CompanyName}"/>
+        <Button Text="Continue" BackgroundColor="#F85903" Command="{Binding ContinueCommand}"></Button>
 
     </VerticalStackLayout>
 </ContentPage>

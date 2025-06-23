@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using QuickBill.IOCContainers;
 using Syncfusion.Maui.Core.Hosting;
 
 namespace QuickBill;
@@ -15,7 +16,11 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
-		builder.ConfigureSyncfusionCore();
+		// builder.ConfigureSyncfusionCore();
+		builder.RegisterServices();
+		builder.RegisterViews();
+		builder.RegisterViewModels();
+
 
 #if ANDROID
     builder.Services.ConfigureMauiHandlers(handlers =>

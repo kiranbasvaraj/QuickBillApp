@@ -1,10 +1,13 @@
+using QuickBill.ViewModels;
+
 namespace QuickBill.Views;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
+	public LoginPage(LoginViewModel loginViewModel)
 	{
 		InitializeComponent();
+		this.BindingContext = loginViewModel;
 	}
 
 	// public void OnLoginClicked(object sender, EventArgs e)
@@ -14,9 +17,9 @@ public partial class LoginPage : ContentPage
 	// 	DisplayAlert("Login", "Login button clicked!", "OK");
 	// }
 
-	void Button_Clicked(System.Object sender, System.EventArgs e)
-	{
-		//DisplayAlert("login","ok","canel");
-		Shell.Current.GoToAsync("//MainTabs");
-    }
+	// void Button_Clicked(System.Object sender, System.EventArgs e)
+	// {
+	// 	//DisplayAlert("login","ok","canel");
+	// 	Shell.Current.GoToAsync("//MainTabs");
+    // }
 }
