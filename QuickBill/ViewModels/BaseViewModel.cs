@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Android.Provider;
 #endif
 using QuickBill.Interfaces;
+using Settings = QuickBill.AppConstants.Settings;
 
 namespace QuickBill.ViewModels;
 

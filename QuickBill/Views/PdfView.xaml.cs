@@ -16,6 +16,7 @@ public partial class PdfView : ContentPage
 	{
 		base.OnAppearing();
 		pdfWebview.Source = _homePageViewModel.PdfSource;
+		
     }
 
 }

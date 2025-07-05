@@ -7,7 +7,7 @@ using QuickBill.Interfaces;
 using QuickBill.Interfaces.LocalDbInterfaces;
 using QuickBill.Models;
 using QuickBill.PdfGeneratorHelper;
-
+using Settings = QuickBill.AppConstants.Settings;
 namespace QuickBill.ViewModels;
 
 public class HomePageViewModel : BaseViewModel, IHomePageViewModel
@@ -20,6 +20,32 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         OnGenerateInvoiceCommand = new Command(async () => await GenerateReceipt());
         AddItemReceiptItemCommand = new Command(async () => await AddItemsToReceipt());
         ClearCommand = new Command(async () => await ClearReceipt());
+        LogoutCommand = new Command(async () =>
+        {
+            Settings.IsLoginSuccess = false;
+            await _receiptItemRepository.DeleteAll();
+            await _navigationService.NavigateAsync("//LoginPage");
+        });
+        ShareCommand = new Command(async () =>
+        {
+
+            if (!File.Exists(pdfFilePath))
+            {
+                // Handle file not found
+                return;
+            }
+            else
+            {
+                await Share.Default.RequestAsync(new ShareFileRequest
+                {
+                    Title = "Share PDF Report",
+                    File = new ShareFile(pdfFilePath)
+                });
+
+
+            }
+
+        });
         ReceiptItemModelList = new ObservableCollection<ReceiptItemModel>();
         _receiptItemRepository = receiptItemRepository;
         _navigationService = navigationService;
@@ -68,7 +94,7 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         }
     }
 
-    private string itemName = "test item";
+    private string itemName;
     public string ItemName
     {
         get { return itemName; }
@@ -91,7 +117,7 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
             SetProperty(ref _totalAmount, value);
         }
     }
-    private int? quantity = 12;
+    private int? quantity;
     public int? Quantity
     {
         get { return quantity; }
@@ -101,7 +127,7 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         }
     }
 
-    private double? price = 100;
+    private double? price;
     public double? Price
     {
         get { return price; }
@@ -111,11 +137,43 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         }
     }
 
+    private string custName;
+    public string CustName
+    {
+        get { return custName; }
+        set
+        {
+            SetProperty(ref custName, value);
+        }
+    }
+
+    private string custMobile;
+    public string CustMobile
+    {
+        get { return custMobile; }
+        set
+        {
+            SetProperty(ref custMobile, value);
+        }
+    }
+
+    private string _custEmail;
+    public string CustEmail
+    {
+        get { return _custEmail; }
+        set
+        {
+            SetProperty(ref _custEmail, value);
+        }
+    }
+
 
     public ICommand OnGenerateInvoiceCommand { get; set; }
     public ICommand AddItemReceiptItemCommand { get; set; }
     public ICommand ClearCommand { get; set; }
 
+    public ICommand LogoutCommand { get; set; }
+    public ICommand ShareCommand { get; set; }
 
     public async Task AddItemsToReceipt()
     {
@@ -152,15 +210,15 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
 
 
 
-
+    string pdfFilePath;
     public async Task GenerateReceipt()
     {
-        var pdfFile = await PdfHelper.OnGenerateInvoiceClicked(await GetAllReceiptItems());
+        pdfFilePath = await PdfHelper.OnGenerateInvoiceClicked(await GetAllReceiptItems(), custMobile, custName, CustEmail);
 
 #if ANDROID
-        PdfSource = $"file:///android_asset/pdfjs/web/viewer.html?file=file://{WebUtility.UrlEncode(pdfFile)}";
+        PdfSource = $"file:///android_asset/pdfjs/web/viewer.html?file=file://{WebUtility.UrlEncode(pdfFilePath)}";
 #else
-        PdfSource = pdfFile;
+        PdfSource = pdfFilePath;
 #endif
         await _navigationService.NavigateAsync("PdfView");
     }

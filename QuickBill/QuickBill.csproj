@@ -32,12 +32,14 @@
 
 
     <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+    <!-- <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" /> -->
 
     <!-- Images -->
-    <MauiImage Include="Resources\Images\*" Exclude="Resources/Images/history.png;Resources/Images/receipt.png;" />
+    <MauiImage Include="Resources\Images\*" Exclude="Resources/Images/history.png;Resources/Images/receipt.png;Resources/Images/logout.png;Resources/Images/sharepdf.png" />
     <MauiImage Include="Resources/Images/history.png" Resize="true" BaseSize="50,50" />
     <MauiImage Include="Resources/Images/receipt.png" Resize="true" BaseSize="50,50" />
+    <MauiImage Include="Resources/Images/logout.png" Resize="true" BaseSize="50,50" />
+    <MauiImage Include="Resources/Images/sharepdf.png" Resize="true" BaseSize="50,50" />
 
     <!-- Fonts -->
     <MauiFont Include="Resources\Fonts\*" />

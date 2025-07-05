@@ -26,13 +26,13 @@
                    FontAttributes="Bold"/>
             <Entry Placeholder="Enter phone number"
                    Keyboard="Telephone"
-                   Text="{Binding CompanyPhone}"/>
+                   Text="{Binding PhoneNumber}"/>
 
             <Label Text="Email"
                    FontAttributes="Bold"/>
             <Entry Placeholder="Enter email"
                    Keyboard="Email"
-                   Text="{Binding CompanyEmail}"/>
+                   Text="{Binding Email}"/>
 
             <Button Text="Submit"
                     Command="{Binding ContinueCommand}"

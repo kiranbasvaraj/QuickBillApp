@@ -5,8 +5,10 @@
              xmlns:models="clr-namespace:QuickBill.Models"
              x:DataType="local:HomePageViewModel">
   <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Clear"
+    <ToolbarItem IconImageSource="clear"
                  Command="{Binding ClearCommand}"/>
+    <ToolbarItem IconImageSource="logout.png"
+                 Command="{Binding LogoutCommand}"/>
   </ContentPage.ToolbarItems>
 
   <ContentPage.Resources>
@@ -17,7 +19,7 @@
   </ContentPage.Resources>
 
   <Grid RowDefinitions="Auto,*,Auto,Auto"
-        Margin="10">
+        Margin="0">
 
     <!-- Red bordered form area -->
     <Border Grid.Row="0"
@@ -28,6 +30,7 @@
       <Grid Padding="1,5,-2,5">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="3*"/>
@@ -35,35 +38,44 @@
           <ColumnDefinition Width="2*"/>
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        <StackLayout   Grid.Column="0"
+            Grid.Row="0" Grid.ColumnSpan="4">
+          <Entry Placeholder="Customer Name" Text="{Binding CustName}"></Entry>
+          <Entry Placeholder="Customer Mobile number" Keyboard="Telephone" Text="{Binding CustMobile}"></Entry>
+          <Entry Placeholder="Customer Email" Keyboard="Email" Text="{Binding CustEmail}"></Entry>
+        </StackLayout>
         <!-- Form Fields -->
         <Entry Placeholder="Item"
                Grid.Column="0"
+               Grid.Row="1"
                Text="{Binding ItemName}"
                HorizontalTextAlignment="Justify"/>
 
         <Entry Placeholder="Qty"
                Grid.Column="1"
+               Grid.Row="1"
                Text="{Binding Quantity}"
                HorizontalTextAlignment="Justify"
                Keyboard="Numeric"/>
 
         <Entry Placeholder="Price in ₹"
                Grid.Column="2"
+               Grid.Row="1"
                Text="{Binding Price}"
                HorizontalTextAlignment="Justify"
                Keyboard="Numeric"/>
 
         <!-- Check/Add Button -->
         <Button Grid.Column="3"
+                Grid.Row="1"
                 VerticalOptions="Center"
                 Text="✔"
-                FontSize="16"
-                WidthRequest="20"
-                HeightRequest="20"
+                FontSize="12"
+                WidthRequest="15"
+                HeightRequest="15"
                 BackgroundColor="Green"
                 TextColor="White"
-                CornerRadius="80"
+                CornerRadius="10"
                 Command="{Binding AddItemReceiptItemCommand}"/>
       </Grid>
     </Border>

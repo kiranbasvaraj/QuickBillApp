@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuickBill.Views.ReceiptHistoryPage"
 >
-    <VerticalStackLayout>
+    <VerticalStackLayout VerticalOptions="CenterAndExpand">
         <Label 
-            Text="History!"
+            Text="No history found!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>

@@ -8,6 +8,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.IO.Font.Constants;
 using QuickBill.Models;
+using QuickBill.AppConstants;
 
 
 namespace QuickBill.PdfGeneratorHelper;
@@ -16,9 +17,9 @@ public class PdfHelper
 {
 
 
-    public static async Task<string> OnGenerateInvoiceClicked(List<ReceiptItemModel> receiptItems)
+    public static async Task<string> OnGenerateInvoiceClicked(List<ReceiptItemModel> receiptItems, string custMobile, string custName, string CustEmail)
     {
-        string fileName = "mauidotnet.pdf";
+        string fileName = "quickbill.pdf";
 
 #if ANDROID
         var docsDirectory = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDocuments);
@@ -27,81 +28,7 @@ public class PdfHelper
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
 #endif
 
-        // using (PdfWriter writer = new PdfWriter(filePath))
-        // {
-        //     PdfDocument pdf = new PdfDocument(writer);
-        //     Document document = new Document(pdf);
-
-        //     // Title
-        //     Paragraph header = new Paragraph("QuickBill Invoice")
-        //         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
-        //         .SetFontSize(20);
-        //     document.Add(header);
-
-        //     // Subtitle
-        //     Paragraph subheader = new Paragraph("Your Company Name")
-        //         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
-        //         .SetFontSize(15);
-        //     document.Add(subheader);
-
-        //     // Line separator
-        //     LineSeparator ls = new LineSeparator(new SolidLine());
-        //     document.Add(ls);
-
-        //     // Logo/Image
-        //     var imgStream = await ConvertImageSourceToStreamAsync("dotnet_bot.png");
-        //     var image = new iText.Layout.Element.Image(ImageDataFactory.Create(imgStream))
-        //         .SetHorizontalAlignment(iText.Layout.Properties.HorizontalAlignment.CENTER)
-        //         .SetWidth(100);
-        //     document.Add(image);
-
-        //     // Spacer
-        //     document.Add(new Paragraph("\n"));
-
-        //     // Invoice Table Setup
-        //     float[] columnWidths = { 1, 3, 2, 2, 2 };
-        //     Table table = new Table(UnitValue.CreatePercentArray(columnWidths));
-        //     table.SetWidth(UnitValue.CreatePercentValue(100));
-
-        //     // Table Header
-        //     table.AddHeaderCell("S.No");
-        //     table.AddHeaderCell("Item");
-        //     table.AddHeaderCell("Unit Price");
-        //     table.AddHeaderCell("Quantity");
-        //     table.AddHeaderCell("Total");
-
-        //     // Sample Data Rows
-        //     for (int i = 1; i <= 3; i++)
-        //     {
-        //         table.AddCell(i.ToString());
-        //         table.AddCell("Item " + i);
-        //         table.AddCell("₹100");
-        //         table.AddCell("2");
-        //         table.AddCell("₹200");
-        //     }
-
-        //     // Total Row
-        //     iText.Layout.Element.Cell totalCell = new iText.Layout.Element.Cell(1, 4).Add(new Paragraph("Grand Total")).SetBold();
-        //     totalCell.SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT);
-        //     table.AddCell(totalCell);
-        //     table.AddCell(new Paragraph("₹600").SetBold());
-
-        //     document.Add(table);
-
-        //     // Footer
-        //     document.Add(new Paragraph("\n"));
-        //     Paragraph footer = new Paragraph("Thank you for choosing QuickBill!")
-        //         .SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT)
-        //         .SetFontColor(iText.Kernel.Colors.ColorConstants.GRAY)
-        //         .SetFontSize(12);
-        //     document.Add(footer);
-
-        //     // Finish
-        //     document.Close();
-        // }
-
-
-        await GenerateReceiptPdfAsync(filePath, receiptItems);
+        await GenerateReceiptPdfAsync(filePath, receiptItems, custMobile, custName, CustEmail);
 
         return filePath;
     }
@@ -119,7 +46,7 @@ public class PdfHelper
 
     // Uncomment the following method if you need to convert an ImageSource to a byte array
 
-    public static async Task GenerateReceiptPdfAsync(string filePath, List<ReceiptItemModel> receiptItems)
+    public static async Task GenerateReceiptPdfAsync(string filePath, List<ReceiptItemModel> receiptItems, string custMobile, string custName, string CustEmail)
     {
         await Task.Run(() =>
         {
@@ -138,9 +65,9 @@ public class PdfHelper
             // Company Header
             var companyTable = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }))
                 .UseAllAvailableWidth();
-            companyTable.AddCell(new Paragraph("Company Name\nAddress 1\nAddress 2")
+            companyTable.AddCell(new Paragraph($"Company Name:{Settings.CompanyName}\nPhone: {Settings.PhoneNumber}\nEmail: {Settings.Email}\nAddress 1{Settings.CompanyAddress}")
                 .SetFont(regular).SetFontSize(10).SetBorder(iText.Layout.Borders.Border.NO_BORDER));
-            companyTable.AddCell(new Paragraph("TO:\nCustomer Name\nPhone: 123456789\nEmail: demo@example.com")
+            companyTable.AddCell(new Paragraph($"TO:\n{custName}\nPhone: {custMobile}\nEmail: {CustEmail}")
                 .SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT).SetFont(regular).SetFontSize(10).SetBorder(iText.Layout.Borders.Border.NO_BORDER));
             document.Add(companyTable);
 
@@ -149,7 +76,7 @@ public class PdfHelper
             // Receipt Info
             var receiptTable = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }))
                 .UseAllAvailableWidth();
-            receiptTable.AddCell(new Paragraph("Receipt # RT-356890")
+            receiptTable.AddCell(new Paragraph($"Receipt # RT-{Guid.NewGuid()}")
                 .SetFont(bold).SetFontSize(12).SetBorder(iText.Layout.Borders.Border.NO_BORDER));
             receiptTable.AddCell(new Paragraph(DateTime.Now.ToString())
                 .SetTextAlignment(iText.Layout.Properties.TextAlignment.RIGHT).SetFont(regular).SetFontSize(10).SetBorder(iText.Layout.Borders.Border.NO_BORDER));
