@@ -70,6 +70,21 @@ public class LoginViewModel : BaseViewModel, ILoginViewModel
         }
     }
 
+    private bool isEmailValid;
+    public bool IsEmailValid
+    {
+        get { return isEmailValid; }
+        set
+        {
+            if (isEmailValid != value)
+            {
+                 isEmailValid = value;
+                 OnPropertyChanged(nameof(IsEmailValid)); // optional
+            }
+            //SetProperty(ref isEmailValid, value);
+        }
+    }
+
 
     public LoginViewModel(INavigationService navigationService)
     {
@@ -81,10 +96,15 @@ public class LoginViewModel : BaseViewModel, ILoginViewModel
     private async Task OnContinue()
     {
         // Handle the continue button click event
-        if (!string.IsNullOrWhiteSpace(CompanyName) && !string.IsNullOrWhiteSpace(CompanyAddress) && !string.IsNullOrWhiteSpace(PhoneNumber) && !string.IsNullOrWhiteSpace(Email))
+        if (!string.IsNullOrWhiteSpace(CompanyName) && !string.IsNullOrWhiteSpace(CompanyAddress) && !string.IsNullOrWhiteSpace(PhoneNumber) && (!string.IsNullOrWhiteSpace(Email)))
         {
-            Settings.IsLoginSuccess = true;
-            await _navigationService.NavigateAsync("//MainTabs");
+            if (!IsEmailValid)
+                await NavigationService.GetMainPage().DisplayAlert("Invalid Email", "Please enter a valid email address.", "OK");
+            else
+            {
+                Settings.IsLoginSuccess = true;
+                await _navigationService.NavigateAsync("//MainTabs");
+            }
         }
         else
             await NavigationService.GetMainPage().DisplayAlert("Alert!", "Please fill all the details.", "OK");

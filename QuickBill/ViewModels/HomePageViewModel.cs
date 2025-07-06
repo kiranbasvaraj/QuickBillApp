@@ -20,6 +20,17 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         OnGenerateInvoiceCommand = new Command(async () => await GenerateReceipt());
         AddItemReceiptItemCommand = new Command(async () => await AddItemsToReceipt());
         ClearCommand = new Command(async () => await ClearReceipt());
+
+        DeleteCommand = new Command(async (p) => await DeleteCommandHanlder(p));
+        // DeleteCommand =new Command(async (param) =>
+        // {
+        //     if (param is ReceiptItemModel item)
+        //     {
+        //         await _receiptItemRepository.Delete(item);
+        //         await GetAllReceiptItems();
+        //         OnPropertyChanged("TotalAmount");
+        //     }
+        // });
         LogoutCommand = new Command(async () =>
         {
             Settings.IsLoginSuccess = false;
@@ -50,6 +61,29 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         _receiptItemRepository = receiptItemRepository;
         _navigationService = navigationService;
 
+    }
+
+    private async Task DeleteCommandHanlder(object item)
+    {
+        if (item == null)
+        {
+            Debug.WriteLine("Item is null, cannot delete.");
+            return;
+        }
+
+        try
+        {
+            if (item is ReceiptItemModel ReceiptItemModelItem)
+            {
+                await _receiptItemRepository.Delete(ReceiptItemModelItem);
+                await GetAllReceiptItems();
+                OnPropertyChanged("TotalAmount");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error deleting item: {ex.Message}");
+        }
     }
 
     public override void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -101,6 +135,8 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         set
         {
             SetProperty(ref itemName, value);
+            HandleSaveButton();
+            OnPropertyChanged(nameof(ShouldEnabledSaveButton));
         }
     }
 
@@ -124,6 +160,8 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         set
         {
             SetProperty(ref quantity, value);
+            HandleSaveButton();
+            OnPropertyChanged(nameof(ShouldEnabledSaveButton));
         }
     }
 
@@ -134,6 +172,8 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         set
         {
             SetProperty(ref price, value);
+            HandleSaveButton();
+            OnPropertyChanged(nameof(ShouldEnabledSaveButton));
         }
     }
 
@@ -167,6 +207,16 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
         }
     }
 
+    private bool isEmailValid;
+    public bool IsEmailValid
+    {
+        get { return isEmailValid; }
+        set
+        {
+            SetProperty(ref isEmailValid, value);
+        }
+    }
+
 
     public ICommand OnGenerateInvoiceCommand { get; set; }
     public ICommand AddItemReceiptItemCommand { get; set; }
@@ -174,18 +224,19 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
 
     public ICommand LogoutCommand { get; set; }
     public ICommand ShareCommand { get; set; }
+    public ICommand DeleteCommand { get; set; }
+    public bool ShouldEnabledSaveButton { get; private set; }
 
     public async Task AddItemsToReceipt()
     {
         ReceiptItemModel receiptItemModel = new ReceiptItemModel() { ItemName = this.ItemName, Quantity = Quantity, Price = Price };
-        // ReceiptItemModelList.Add(receiptItemModel);
 
         await _receiptItemRepository.Insert(receiptItemModel);
         await GetAllReceiptItems();
         OnPropertyChanged("TotalAmount");
-        // ItemName = string.Empty;
-        // Quantity = null;
-        // Price = null;
+        ItemName = string.Empty;
+        Quantity = null;
+        Price = null;
     }
     private async Task<List<ReceiptItemModel>> GetAllReceiptItems()
     {
@@ -213,14 +264,48 @@ public class HomePageViewModel : BaseViewModel, IHomePageViewModel
     string pdfFilePath;
     public async Task GenerateReceipt()
     {
-        pdfFilePath = await PdfHelper.OnGenerateInvoiceClicked(await GetAllReceiptItems(), custMobile, custName, CustEmail);
+       if ((await GetAllReceiptItems()).Count < 1)
+        {
+            await NavigationService.GetMainPage().DisplayAlert("Alert!", "Please add at least one item to generate the receipt.", "OK");
+            return;
+        }
+
+
+
+        if (string.IsNullOrWhiteSpace(CustName) || string.IsNullOrWhiteSpace(CustMobile) || string.IsNullOrWhiteSpace(CustEmail))
+        {
+            await NavigationService.GetMainPage().DisplayAlert("Alert!", "Please fill all the details.", "OK");
+            return;
+        }
+        if (!IsEmailValid)
+            await NavigationService.GetMainPage().DisplayAlert("Invalid Email", "Please enter a valid email address.", "OK");
+        else
+        {
+            pdfFilePath = await PdfHelper.OnGenerateInvoiceClicked(await GetAllReceiptItems(), custMobile, custName, CustEmail);
 
 #if ANDROID
-        PdfSource = $"file:///android_asset/pdfjs/web/viewer.html?file=file://{WebUtility.UrlEncode(pdfFilePath)}";
+            PdfSource = $"file:///android_asset/pdfjs/web/viewer.html?file=file://{WebUtility.UrlEncode(pdfFilePath)}";
 #else
         PdfSource = pdfFilePath;
 #endif
-        await _navigationService.NavigateAsync("PdfView");
+            await _navigationService.NavigateAsync("PdfView");
+        }
+    }
+
+    void HandleSaveButton()
+    {
+        // if (string.IsNullOrWhiteSpace(itemName) && quantity != null && quantity > 0 && price != null && price > 0)
+        // {
+        //     ShouldEnabledSaveButton = false;
+        // }
+        // else
+        // {
+        //     ShouldEnabledSaveButton = true;
+
+        // }
+
+        ShouldEnabledSaveButton = !string.IsNullOrWhiteSpace(itemName) && quantity.HasValue && quantity > 0 && price.HasValue && price > 0;
+
     }
 
     public async Task OnAppearingHanlder()

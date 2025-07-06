@@ -2,8 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuickBill.Views.HomePage"
              xmlns:local="clr-namespace:QuickBill.ViewModels"
+             xmlns:behaviours="clr-namespace:QuickBill.Behaviours"
              xmlns:models="clr-namespace:QuickBill.Models"
-             x:DataType="local:HomePageViewModel">
+             x:Name="thispage">
   <ContentPage.ToolbarItems>
     <ToolbarItem IconImageSource="clear"
                  Command="{Binding ClearCommand}"/>
@@ -24,8 +25,7 @@
     <!-- Red bordered form area -->
     <Border Grid.Row="0"
             Padding="0"
-            StrokeThickness="1"
-            Stroke="gray">
+            BackgroundColor="#FFEFEAEA">
 
       <Grid Padding="1,5,-2,5">
         <Grid.RowDefinitions>
@@ -39,29 +39,43 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackLayout   Grid.Column="0"
-            Grid.Row="0" Grid.ColumnSpan="4">
-          <Entry Placeholder="Customer Name" Text="{Binding CustName}"></Entry>
-          <Entry Placeholder="Customer Mobile number" Keyboard="Telephone" Text="{Binding CustMobile}"></Entry>
-          <Entry Placeholder="Customer Email" Keyboard="Email" Text="{Binding CustEmail}"></Entry>
+                       Grid.Row="0"
+                       Grid.ColumnSpan="4">
+          <Entry Placeholder="Customer Name*"
+                 MaxLength="15"
+                 Text="{Binding CustName}"></Entry>
+          <Entry Placeholder="Customer Mobile number*"
+                 Keyboard="Telephone"
+                 Text="{Binding CustMobile}"
+                 MaxLength="10"></Entry>
+          <Entry Placeholder="Customer Email (Optional)"
+                 Keyboard="Email"
+                 Text="{Binding CustEmail}">
+            <Entry.Behaviors>
+              <behaviours:EmailValidatorBehaviour IsValid="{Binding IsEmailValid, Mode=OneWayToSource}"/>
+            </Entry.Behaviors>
+          </Entry>
         </StackLayout>
         <!-- Form Fields -->
         <Entry Placeholder="Item"
                Grid.Column="0"
                Grid.Row="1"
-               Text="{Binding ItemName}"
+               Text="{Binding ItemName,Mode=TwoWay}"
                HorizontalTextAlignment="Justify"/>
 
         <Entry Placeholder="Qty"
                Grid.Column="1"
                Grid.Row="1"
-               Text="{Binding Quantity}"
+               MaxLength="5"
+               Text="{Binding Quantity,Mode=TwoWay}"
                HorizontalTextAlignment="Justify"
                Keyboard="Numeric"/>
 
         <Entry Placeholder="Price in ₹"
                Grid.Column="2"
+               MaxLength="7"
                Grid.Row="1"
-               Text="{Binding Price}"
+               Text="{Binding Price,Mode=TwoWay}"
                HorizontalTextAlignment="Justify"
                Keyboard="Numeric"/>
 
@@ -76,13 +90,28 @@
                 BackgroundColor="Green"
                 TextColor="White"
                 CornerRadius="10"
-                Command="{Binding AddItemReceiptItemCommand}"/>
+                BorderColor="Transparent"
+                BorderWidth="1"
+                IsEnabled="{Binding ShouldEnabledSaveButton}"
+                Command="{Binding AddItemReceiptItemCommand}">
+          <Button.Triggers>
+            <DataTrigger TargetType="Button"
+                         Binding="{Binding ShouldEnabledSaveButton}"
+                         Value="False">
+              <Setter Property="BackgroundColor"
+                  Value="#FFC9C3C3"/>
+                   <Setter Property="BorderColor"
+                  Value="#000000"/>
+                  </DataTrigger>
+          </Button.Triggers>
+        </Button>
       </Grid>
     </Border>
 
+
     <!-- CollectionView Row -->
     <CollectionView Grid.Row="1"
-                    BackgroundColor="AliceBlue"
+                    BackgroundColor="#C5EFEAEA"
                     ItemsSource="{Binding ReceiptItemModelList}">
 
       <!-- Header -->
@@ -95,7 +124,7 @@
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="3*"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
             <Label Text="ItemName"
@@ -115,27 +144,48 @@
 
       <!-- Items -->
       <CollectionView.ItemTemplate>
-        <DataTemplate x:DataType="models:ReceiptItemModel">
-          <Grid Padding="5">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="3*"/>
-              <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <DataTemplate>
+          <Border Stroke="#FF030303"
+                  BackgroundColor="#FFEFEAEA"
+                  StrokeThickness="1"
+                  Margin="0,0,0,5">
+            <Grid Padding="10">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+              </Grid.RowDefinitions>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
 
-            <Label Text="{Binding ItemName}"
-                   Grid.Column="0"
-                   HorizontalTextAlignment="Start"/>
-            <Label Text="{Binding Quantity}"
-                   Grid.Column="1"
-                   HorizontalTextAlignment="Center"/>
-            <Label Text="{Binding Price}"
-                   Grid.Column="2"
-                   HorizontalTextAlignment="Center"/>
-          </Grid>
+              <Label Text="{Binding ItemName}"/>
+
+              <Label Text="{Binding Quantity}"
+                     Grid.Column="1"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     HorizontalTextAlignment="Center"/>
+
+              <Label Text="{Binding Price}"
+                     Grid.Column="2"
+                     HorizontalOptions="End"
+                     VerticalOptions="Center"
+                     HorizontalTextAlignment="Center"/>
+              <ImageButton Grid.Column="3"
+                           Source="clear"
+                           Padding="10"
+                           Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference thispage}}"
+                           CommandParameter="{Binding .}"
+                           HeightRequest="10"
+                           WidthRequest="10"
+                           HorizontalOptions="EndAndExpand"
+                           VerticalOptions="Center"/>
+
+
+            </Grid>
+          </Border>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>

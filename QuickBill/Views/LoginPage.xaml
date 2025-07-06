@@ -1,44 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviours="clr-namespace:QuickBill.Behaviours"
              x:Class="QuickBill.Views.LoginPage">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+       <ScrollView>
+              <VerticalStackLayout Padding="20"
+                                   Spacing="20">
 
-            <Label Text="Welcome to QuickBill"
-                   FontSize="32"
-                   HorizontalTextAlignment="Center"
-                   TextColor="Black"/>
+                     <Label Text="Welcome to QuickBill"
+                            FontSize="32"
+                            HorizontalTextAlignment="Center"
+                            TextColor="Black"/>
 
-            <Label Text="Company Name"
-                   FontAttributes="Bold"/>
-            <Entry Placeholder="Enter company name"
-                   Text="{Binding CompanyName}"/>
+                     <Label Text="Company Name"
+                            FontAttributes="Bold"/>
+                     <Entry Placeholder="Enter company name"
+                            Text="{Binding CompanyName}"/>
 
-            <Label Text="Company Address"
-                   FontAttributes="Bold"/>
-            <Editor Placeholder="Enter company address"
-                    AutoSize="TextChanges"
-                    Text="{Binding CompanyAddress}"/>
+                     <Label Text="Company Address"
+                            FontAttributes="Bold"/>
+                     <Editor Placeholder="Enter company address"
+                             AutoSize="TextChanges"
+                             Text="{Binding CompanyAddress}"/>
 
-            <Label Text="Phone Number"
-                   FontAttributes="Bold"/>
-            <Entry Placeholder="Enter phone number"
-                   Keyboard="Telephone"
-                   Text="{Binding PhoneNumber}"/>
+                     <Label Text="Phone Number"
+                            FontAttributes="Bold"/>
+                     <Entry Placeholder="Enter phone number"
+                            Keyboard="Telephone"
+                            MaxLength="10"
+                            Text="{Binding PhoneNumber}"/>
 
-            <Label Text="Email"
-                   FontAttributes="Bold"/>
-            <Entry Placeholder="Enter email"
-                   Keyboard="Email"
-                   Text="{Binding Email}"/>
+                     <Label Text="Email"
+                            FontAttributes="Bold"/>
+                     <Entry Placeholder="Enter email"
+                            Keyboard="Email"
+                            Text="{Binding Email}">
+                            <Entry.Behaviors>
+                                   <behaviours:EmailValidatorBehaviour IsValid="{Binding IsEmailValid, Mode=TwoWay}"/>
+                            </Entry.Behaviors>
+                     </Entry>
 
-            <Button Text="Submit"
-                    Command="{Binding ContinueCommand}"
-                    BackgroundColor="#F85903"
-                    TextColor="White"/>
-        </VerticalStackLayout>
-    </ScrollView>
+                     <Button Text="Submit"
+                             Command="{Binding ContinueCommand}"
+                             BackgroundColor="#F85903"
+                             TextColor="White"/>
+                     <Label x:Name="versionLbl"
+                                   FontSize="Small"
+                            TextColor="Gray"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="Center"></Label>
+              </VerticalStackLayout>
+       </ScrollView>
 
 </ContentPage>

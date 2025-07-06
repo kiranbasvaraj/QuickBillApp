@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+    <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
+      $(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>QuickBill</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -12,30 +14,51 @@
 
     <!-- App info -->
     <ApplicationTitle>QuickBill</ApplicationTitle>
-    <ApplicationId>com.companyname.quickbill</ApplicationId>
+    <ApplicationId>com.kiran.quickbill</ApplicationId>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion
+      Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion
+      Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
+  <PropertyGroup
+    Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
     <CreatePackage>false</CreatePackage>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <OutputPath>bin\Release\</OutputPath>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+
+    <!-- 3. Trim Unused Assemblies -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>link</TrimMode>
+
+    <!-- 4. Use AAB format -->
+
+    <!-- 5. Strip Debug Symbols -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <!-- App Icon -->
-    <!-- <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" /> -->
-     <!-- <MauiIcon Include="Resources\AppIcon\app_icon.png"  Color="#512BD4" /> -->
-      <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#F85903" />
+    <!-- <MauiIcon Include="Resources\AppIcon\appicon.svg"
+    ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" /> -->
+    <!-- <MauiIcon Include="Resources\AppIcon\app_icon.png"  Color="#512BD4" /> -->
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#F85903" />
 
 
     <!-- Splash Screen -->
-    <!-- <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" /> -->
+    <!-- <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"
+    /> -->
 
     <!-- Images -->
-    <MauiImage Include="Resources\Images\*" Exclude="Resources/Images/history.png;Resources/Images/receipt.png;Resources/Images/logout.png;Resources/Images/sharepdf.png" />
+    <MauiImage Include="Resources\Images\*"
+      Exclude="Resources/Images/history.png;Resources/Images/receipt.png;Resources/Images/logout.png;Resources/Images/sharepdf.png" />
     <MauiImage Include="Resources/Images/history.png" Resize="true" BaseSize="50,50" />
     <MauiImage Include="Resources/Images/receipt.png" Resize="true" BaseSize="50,50" />
     <MauiImage Include="Resources/Images/logout.png" Resize="true" BaseSize="50,50" />
@@ -49,12 +72,12 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <AndroidAsset Include="Resources\Raw\pdfjs\**" />
-	</ItemGroup>
+    <AndroidAsset Include="Resources\Raw\pdfjs\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="itext7" Version="8.0.3" />
-		<PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.3" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.3" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />

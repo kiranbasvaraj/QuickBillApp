@@ -103,10 +103,10 @@ public class PdfHelper
 
             foreach (var item in receiptItems)
             {
-                items.AddCell(new Paragraph(item.ItemName));
+                items.AddCell(new Paragraph(item.ItemName??string.Empty));
                 items.AddCell(new Paragraph("NA"));
-                items.AddCell(item.Quantity?.ToString());
-                items.AddCell(item.Price?.ToString());
+                items.AddCell(item.Quantity?.ToString()??string.Empty);
+                items.AddCell(item.Price?.ToString()??string.Empty);
             }
             document.Add(items);
 

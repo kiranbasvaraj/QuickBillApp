@@ -5,6 +5,10 @@ public partial class App : Application
 {
 	public App()
 	{
+		if (Current != null)
+		{
+			Current.UserAppTheme = AppTheme.Light;
+		}
 		InitializeComponent();
 
 		//MainPage = new MainPage();

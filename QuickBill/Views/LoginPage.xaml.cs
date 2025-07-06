@@ -13,7 +13,8 @@ public partial class LoginPage : ContentPage
 	override protected void OnAppearing()
 	{
 		base.OnAppearing();
-		if(Settings.IsLoginSuccess)
+		versionLbl.Text = $"Version: {AppInfo.VersionString} ({AppInfo.BuildString})";
+		if (Settings.IsLoginSuccess)
 		{
 			// If the user is already logged in, navigate to the main page
 			Shell.Current.GoToAsync("//MainTabs");
