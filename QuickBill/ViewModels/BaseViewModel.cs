@@ -18,7 +18,7 @@ public class BaseViewModel : IQueryAttributable, INotifyPropertyChanged, IBaseVi
         //throw new NotImplementedException();
     }
 
-    protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = null, Action onChanged = null)
+    protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string? propertyName = null, Action? onChanged = null)
     {
         if (EqualityComparer<T>.Default.Equals(backingStore, value))
             return false;
@@ -29,8 +29,9 @@ public class BaseViewModel : IQueryAttributable, INotifyPropertyChanged, IBaseVi
         return true;
     }
 
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (propertyName != null)
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
