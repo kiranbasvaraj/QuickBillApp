@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: windows-latest
 
   
 
@@ -49,28 +49,17 @@ jobs:
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$KEYSTORE_PATH"
           ls -l "$KEYSTORE_PATH"
 
-      - name: Build Android (compile only)
-        run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android --no-restore
+      - name: Build unsigned APK
+        run: |
+          dotnet publish QuickBill/QuickBill.csproj \
+            -c Release \
+            -f net9.0-android \
+            -r android-arm64 \
+            -p:AndroidPackageFormat=apk \
+            --no-restore
 
-      - name: Publish signed APK
-        run: >
-          dotnet publish QuickBill/QuickBill.csproj
-          -c Release
-          -f net9.0-android
-          -r android-arm64
-          -p:AndroidPackageFormat=apk
-          -p:AndroidKeyStore=True
-          -p:AndroidSigningKeyStore="$KEYSTORE_PATH"
-          -p:AndroidSigningStorePass="${{ env.KEYSTORE_PASSWORD }}"
-          -p:AndroidSigningKeyAlias="${{ env.KEY_ALIAS }}"
-          -p:AndroidSigningKeyPass="${{ env.KEY_PASSWORD }}"
-          --no-restore
-
-      - name: Find APK
-        run: find QuickBill -type f -name "*.apk" -print
-
-      - name: Upload APK artifact
+      - name: Upload unsigned APK
         uses: actions/upload-artifact@v4
         with:
-          name: QuickBill-android-arm64-apk
-          path: QuickBill/**/publish/*.apk
+          name: unsigned-apk
+          path: QuickBill/bin/Release/net9.0-android/android-arm64/publish/*.apk
