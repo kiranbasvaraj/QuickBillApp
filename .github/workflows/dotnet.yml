@@ -1,5 +1,4 @@
 # This workflow will build a .NET MAUI Android project and produce a signed APK
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 name: MAUI 9 Build
 
@@ -15,7 +14,7 @@ jobs:
 
     env:
       # Where we’ll write the decoded keystore
-      KEYSTORE_PATH: ${{ runner.temp }}/QBKeystore.keystore
+      KEYSTORE_PATH: ${{ github.workspace }}/QBKeystore.keystore
       # Secrets
       KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
