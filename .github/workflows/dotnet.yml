@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -24,6 +24,8 @@ jobs:
       run: dotnet workload install maui
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build Android
       run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android  --no-restore
+    - name: Build Ios
+      run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-ios  --no-restore
   
