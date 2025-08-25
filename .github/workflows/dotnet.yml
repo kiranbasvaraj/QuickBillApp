@@ -1,4 +1,4 @@
-# This workflow will build a .NET project
+# This workflow will build a .NET MAUI Android project and produce a signed APK
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 name: MAUI 9 Build
@@ -11,21 +11,58 @@ on:
 
 jobs:
   build:
-
     runs-on: macos-latest
 
+    env:
+      # Where we’ll write the decoded keystore
+      KEYSTORE_PATH: ${{ runner.temp }}/QBKeystore.keystore
+      # Secrets
+      KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
-    - name: Install MAUI workload
-      run: dotnet workload install maui
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build Android
-      run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android  --no-restore
-    # - name: Build Ios
-    #   run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-ios  --no-restore
-  
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Recreate keystore from secret
+        shell: bash
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$KEYSTORE_PATH"
+          ls -l "$KEYSTORE_PATH"
+
+      - name: Build Android (compile only)
+        run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android --no-restore
+
+      - name: Publish signed APK
+        run: >
+          dotnet publish QuickBill/QuickBill.csproj
+          -c Release
+          -f net9.0-android
+          -r android-arm64
+          -p:AndroidPackageFormat=apk
+          -p:AndroidKeyStore=True
+          -p:AndroidSigningKeyStore="$KEYSTORE_PATH"
+          -p:AndroidSigningStorePass="${{ env.KEYSTORE_PASSWORD }}"
+          -p:AndroidSigningKeyAlias="${{ env.KEY_ALIAS }}"
+          -p:AndroidSigningKeyPass="${{ env.KEY_PASSWORD }}"
+          --no-restore
+
+      - name: Find APK
+        run: find QuickBill -type f -name "*.apk" -print
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuickBill-android-arm64-apk
+          path: QuickBill/**/publish/*.apk
