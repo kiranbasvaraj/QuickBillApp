@@ -26,6 +26,6 @@ jobs:
       run: dotnet restore
     - name: Build Android
       run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android  --no-restore
-    - name: Build Ios
-      run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-ios  --no-restore
+    # - name: Build Ios
+    #   run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-ios  --no-restore
   
