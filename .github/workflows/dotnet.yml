@@ -14,6 +14,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: setup keystore
+        run: |
+         echo "${{ secrets.KEYSTORE_FILE }}" > quickbill.keystore.asc 
+         gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch quickbill.keystore.asc > quickbill.keystore
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -34,6 +38,13 @@ jobs:
         run: dotnet restore
         
       - name: Build
-        run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android
+        run: dotnet build MauiGithubActionsSample/MauiGithubActionsSample.csproj -c Release -f net6.0-android /p:AndroidSigningKeyStore=quickbill.keystore /p:AndroidSigningKeyAlias=quickbill /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_PASSWORD_ALIAS }}" --no-restore
+   
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+           path: |
+               ./**/*.aab
+               ./**/*.apk
 
     
