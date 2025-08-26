@@ -48,13 +48,13 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Bump version in csproj
-        run: |
-         VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
-         VERSION_CODE=$((1000 + GITHUB_RUN_NUMBER))
-         sed -i "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
+      # - name: Bump version in csproj
+      #   run: |
+      #    VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
+      #    VERSION_CODE=$((1000 + GITHUB_RUN_NUMBER))
+      #    sed -i "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
 
-         sed -i "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
+      #    sed -i "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
 
         
       - name: Build
