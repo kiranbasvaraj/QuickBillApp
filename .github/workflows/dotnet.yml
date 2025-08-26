@@ -58,4 +58,20 @@ jobs:
                ./**/*.aab
                ./**/*.apk
 
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v5.0.0
+        with:
+         name: Get Apk from artifacts # Replace with the actual artifact name
+         path: ./downloaded-artifacts # Directory where the artifact will be downloaded
+
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_QUICKBILL_APP_ID }} # Store your App ID as a secret
+          token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          file: ./downloaded-artifacts/app-release.apk # Adjust path as needed
+          groups: testers
+
     
