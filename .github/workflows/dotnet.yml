@@ -54,6 +54,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
+           name: android-build-apk
            path: |
                ./**/*.aab
                ./**/*.apk
@@ -62,8 +63,12 @@ jobs:
       - name: Download APK artifact
         uses: actions/download-artifact@v5.0.0
         with:
-         name: Get Apk from artifacts # Replace with the actual artifact name
+         name: android-build-apk # Replace with the actual artifact name
          path: ./downloaded-artifacts # Directory where the artifact will be downloaded
+
+      - name: List downloaded files
+        run: ls -R ./downloaded-artifacts
+
 
 
       - name: Upload to Firebase App Distribution
