@@ -21,7 +21,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
         with:
           appId: ${{ secrets.FIREBASE_QUICKBILL_APP_ID }} # Store your App ID as a secret
           token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-          file: ./downloaded-artifacts/app-release.apk # Adjust path as needed
-          groups: testers
+          file: ./downloaded-artifacts/QuickBill/bin/Release/net9.0-android/com.kiran.quickbill-Signed.apk
+          groups: tester
 
     
