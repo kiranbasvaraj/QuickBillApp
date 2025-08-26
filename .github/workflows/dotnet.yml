@@ -10,17 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
-
-  
-
-    env:
-      # Where we’ll write the decoded keystore
-      KEYSTORE_PATH: ${{ github.workspace }}/QBKeystore.keystore
-      # Secrets
-      KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-      KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -42,24 +32,8 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
+        
+      - name: Build
+        run: dotnet build QuickBill/QuickBill.csproj -c Release -f net9.0-android
 
-      - name: Recreate keystore from secret
-        shell: bash
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$KEYSTORE_PATH"
-          ls -l "$KEYSTORE_PATH"
-
-      - name: Build unsigned APK
-        run: |
-          dotnet publish QuickBill/QuickBill.csproj \
-            -c Release \
-            -f net9.0-android \
-            -r android-arm64 \
-            -p:AndroidPackageFormat=apk \
-            --no-restore
-
-      - name: Upload unsigned APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: unsigned-apk
-          path: QuickBill/bin/Release/net9.0-android/android-arm64/publish/*.apk
+    
