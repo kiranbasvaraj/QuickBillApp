@@ -1,6 +1,6 @@
 # This workflow will build a .NET MAUI Android project and produce a signed APK
 
-name: MAUI 9 Build
+name: MAUI 9 Build(CI/CD)
 
 on:
   push:
