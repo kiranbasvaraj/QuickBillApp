@@ -38,7 +38,7 @@ jobs:
         run: dotnet restore
         
       - name: Build
-        run: dotnet build MauiGithubActionsSample/MauiGithubActionsSample.csproj -c Release -f net6.0-android /p:AndroidSigningKeyStore=quickbill.keystore /p:AndroidSigningKeyAlias=quickbill /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_PASSWORD_ALIAS }}" --no-restore
+        run: dotnet build QuickBill/QuickBill.csproj -c Release -f net6.0-android /p:AndroidSigningKeyStore=quickbill.keystore /p:AndroidSigningKeyAlias=quickbill /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_PASSWORD_ALIAS }}" --no-restore
    
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
