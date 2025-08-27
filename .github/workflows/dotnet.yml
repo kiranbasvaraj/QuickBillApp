@@ -50,21 +50,26 @@ jobs:
 
       - name: Auto-increment version
         run: |
-         VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
-         VERSION_CODE=$((1000 + GITHUB_RUN_NUMBER))
-
+          VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
+          VERSION_CODE=$((1000 + GITHUB_RUN_NUMBER))
+      
+          echo "VERSION_NAME=$VERSION_NAME"
+          echo "VERSION_CODE=$VERSION_CODE"
+      
           if [[ "$RUNNER_OS" == "macOS" ]]; then
-             # macOS BSD sed requires ''
+            echo "Using BSD sed (macOS)"
             sed -i '' "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
             sed -i '' "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
           else
-            # Linux GNU sed
+            echo "Using GNU sed (Linux)"
             sed -i "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
             sed -i "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
           fi
-
+      
+          echo "Updated values in csproj:"
           grep ApplicationVersion QuickBill/QuickBill.csproj
           grep ApplicationVersionCode QuickBill/QuickBill.csproj
+
 
 
         
