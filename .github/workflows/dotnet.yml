@@ -48,13 +48,24 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      # - name: Bump version in csproj
-      #   run: |
-      #    VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
-      #    VERSION_CODE=$((1000 + GITHUB_RUN_NUMBER))
-      #    sed -i "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
+      - name: Auto-increment version
+        run: |
+         VERSION_NAME="1.0.${GITHUB_RUN_NUMBER}"
+         VERSION_CODE=$((1000 + GITHUB_RUN_NUMBER))
 
-      #    sed -i "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+             # macOS BSD sed requires ''
+            sed -i '' "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
+            sed -i '' "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
+          else
+            # Linux GNU sed
+            sed -i "s|<ApplicationVersion>.*</ApplicationVersion>|<ApplicationVersion>${VERSION_NAME}</ApplicationVersion>|" QuickBill/QuickBill.csproj
+            sed -i "s|<ApplicationVersionCode>.*</ApplicationVersionCode>|<ApplicationVersionCode>${VERSION_CODE}</ApplicationVersionCode>|" QuickBill/QuickBill.csproj
+          fi
+
+          grep ApplicationVersion QuickBill/QuickBill.csproj
+          grep ApplicationVersionCode QuickBill/QuickBill.csproj
+
 
         
       - name: Build
